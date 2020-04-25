@@ -48,7 +48,13 @@ namespace SpleeterGui
             {
                 if (txt_output_directory.Text == "")
                 {
-                    MessageBox.Show("Please select an output directory");
+                    if (Translate_zhcn.Checked == false)
+                    {
+                        MessageBox.Show("Please select an output directory");
+                    }
+                    else {
+                        MessageBox.Show("请选择保存路径");
+                    }
                     return;
                 }
 
@@ -59,10 +65,20 @@ namespace SpleeterGui
                     files_to_process.Add(file);
                     files_remain++;
                 }
-                textBox1.AppendText("Starting processing of all songs\r\n");
+
                 progressBar1.Maximum = files_remain + 1;
-                progressBar1.Value = 0; 
-                progress_txt.Text = "Starting..." + files_remain + " songs remaining";
+                progressBar1.Value = 0;
+
+                if (Translate_zhcn.Checked == false)
+                {
+                    textBox1.AppendText("Starting processing of all songs\r\n");
+                    progress_txt.Text = "Starting..." + files_remain + " songs remaining";
+                }
+                else
+                {
+                    textBox1.AppendText("开始处理全部音乐\r\n");
+                    progress_txt.Text = "开始处理，还有 " + files_remain + " 份文件未处理";
+                }
                 next_song();
             }
             else
@@ -70,21 +86,30 @@ namespace SpleeterGui
                 System.Media.SystemSounds.Asterisk.Play();
             }
         }
-   
+
 
         private void next_song()
         {
             if (files_remain > 0)
             {
-                string pyPath = storage + @"\python\python.exe";
+                //string pyPath = storage + @"\python\python.exe";
+                string pyPath = @"python";
                 progressBar1.Value = progressBar1.Value + 1;
                 Console.WriteLine("starting " + files_to_process[0]);
-                System.IO.File.WriteAllText(storage + @"\config.json", get_config_string());
-                textBox1.AppendText("Processing " + files_to_process[0] + "\r\n");
-                progress_txt.Text = "Working..." + files_remain + " songs remaining";
-                
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(pyPath, @" -W ignore -m spleeter separate -i " + (char)34 + files_to_process[0] + (char)34 + " -o " + (char)34 + txt_output_directory.Text + (char)34 + " -p " + (char)34 + storage + @"\config.json" + (char)34);
-                processStartInfo.WorkingDirectory = storage;
+                //System.IO.File.WriteAllText(storage + @"\config.json", get_config_string());
+                if (Translate_zhcn.Checked == false)
+                {
+                    textBox1.AppendText("Processing " + files_to_process[0] + "\r\n");
+                    progress_txt.Text = "Working..." + files_remain + " songs remaining";
+                }
+                else
+                {
+                    textBox1.AppendText("正在处理 " + files_to_process[0] + "\r\n");
+                    progress_txt.Text = "正在处理，还有 " + files_remain + " 份文件未处理";
+                }
+                //ProcessStartInfo processStartInfo = new ProcessStartInfo(pyPath, @" -W ignore -m spleeter separate -i " + (char)34 + files_to_process[0] + (char)34 + " -o " + (char)34 + txt_output_directory.Text + (char)34 + " -p " + (char)34 + storage + @"\config.json" + (char)34);
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(pyPath, @" -m spleeter separate -i " + (char)34 + files_to_process[0] + (char)34 + " -o " + (char)34 + txt_output_directory.Text + (char)34 + " -p spleeter:" + stem_count + "stems" + (char)34);
+                //processStartInfo.WorkingDirectory = storage;
 
                 processStartInfo.UseShellExecute = false;
                 processStartInfo.ErrorDialog = false;
@@ -106,8 +131,16 @@ namespace SpleeterGui
             }
             else
             {
-                progress_txt.Text = "idle";
-                textBox1.AppendText("Finished processing all songs\r\n");
+                if (Translate_zhcn.Checked == false)
+                {
+                    progress_txt.Text = "idle";
+                    textBox1.AppendText("Finished processing all songs\r\n");
+                }
+                else
+                {
+                    progress_txt.Text = "就绪";
+                    textBox1.AppendText("已完成全部音乐分离处理\r\n");
+                }
                 progressBar1.Value = progressBar1.Maximum;
                 System.Media.SystemSounds.Beep.Play();
             }
@@ -193,7 +226,7 @@ namespace SpleeterGui
             mask_extension = checkBox1.Checked ? "average" : "zeros";
         }
 
-       
+
 
         private void spleeterGithubPageToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -219,7 +252,7 @@ namespace SpleeterGui
         {
             stem_count = "5";
         }
-  
+
         private void Form1_Load(object sender, EventArgs e)
         {
             this.AllowDrop = true;
@@ -239,7 +272,14 @@ namespace SpleeterGui
 
         private void parts_btn2_Click(object sender, EventArgs e)
         {
-            parts_label.Text = "Vocal + Accompaniment";
+            if (Translate_zhcn.Checked == false)
+            { 
+                parts_label.Text = "Vocal + Accompaniment";
+            }
+            else
+            { 
+                parts_label.Text = "人声 + 伴奏"; 
+            }
             parts_btn2.UseVisualStyleBackColor = false;
             parts_btn4.UseVisualStyleBackColor = true;
             parts_btn5.UseVisualStyleBackColor = true;
@@ -248,7 +288,14 @@ namespace SpleeterGui
 
         private void parts_btn4_Click(object sender, EventArgs e)
         {
-            parts_label.Text = "Vocal + Bass + Drums + Other";
+            if (Translate_zhcn.Checked == false)
+            {
+                parts_label.Text = "Vocal + Bass + Drums + Other";
+            }
+            else
+            {
+                parts_label.Text = "人声 + 低音 + 打击乐 + 其他";
+            }
             parts_btn2.UseVisualStyleBackColor = true;
             parts_btn4.UseVisualStyleBackColor = false;
             parts_btn5.UseVisualStyleBackColor = true;
@@ -257,7 +304,14 @@ namespace SpleeterGui
 
         private void parts_btn5_Click(object sender, EventArgs e)
         {
-            parts_label.Text = "Vocal + Bass + Drums + Piano + Other";
+            if (Translate_zhcn.Checked == false)
+            {
+                parts_label.Text = "Vocal + Bass + Drums + Piano + Other";
+            }
+            else
+            {
+                parts_label.Text = "人声 + 低音 + 打击乐 + 钢琴 + 其他";
+            }
             parts_btn2.UseVisualStyleBackColor = true;
             parts_btn4.UseVisualStyleBackColor = true;
             parts_btn5.UseVisualStyleBackColor = false;
@@ -282,22 +336,73 @@ namespace SpleeterGui
             {
                 if (txt_output_directory.Text == "")
                 {
-                    MessageBox.Show("Please select an output directory");
+                    if (Translate_zhcn.Checked == false)
+                    {
+                        MessageBox.Show("Please select an output directory");
+                    }
+                    else
+                    {
+                        MessageBox.Show("请选择保存路径");
+                    }
                     return;
                 }
                 files_remain = 0;
                 foreach (String file in openFileDialog2.FileNames)
                 {
-                    Debug.WriteLine("BBB"+ file);
+                    Debug.WriteLine("BBB" + file);
                     files_to_process.Add(file);
                     files_remain++;
                 }
-                textBox1.AppendText("Starting processing of all songs\r\n");
+                
                 progressBar1.Maximum = files_remain + 1;
                 progressBar1.Value = 0;
-                progress_txt.Text = "Starting..." + files_remain + " songs remaining";
+                if (Translate_zhcn.Checked == false)
+                {
+                    textBox1.AppendText("Starting processing of all songs\r\n");
+                    progress_txt.Text = "Starting..." + files_remain + " songs remaining";
+                }
+                else
+                {
+                    textBox1.AppendText("开始处理全部音乐\r\n");
+                    progress_txt.Text = "开始处理，还有 " + files_remain + " 份文件未处理";
+                }
                 next_song();
             }
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void 切换中文界面ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fileToolStripMenuItem.Text="文件";
+            exitToolStripMenuItem.Text = "退出";
+            helpToolStripMenuItem.Text = "帮助";
+            label5.Text = "分离声部数量";
+            checkBox1.Text = "启用全带宽（高质量）-此功能已屏蔽";
+            button2.Text = "保存路径";
+            label7.Text = "处理进度";
+            label2.Text = "拖放文件至此处以开始处理（支持多文件）";
+            label1.Text = "或";
+            button1.Text = "选择文件";
+            label3.Text = "分离音乐声部";
+            label4.Text = "Windows桌面版";
+            progress_txt.Text = "就绪";
+            parts_label.Text = "人声 + 伴奏";
+            Translate_zhcn.Checked = true;
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void modByAcFun我就是来打酱油的ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("感谢来自deezer的Spleeter!   https://github.com/deezer/spleeter \n\r感谢来自boy1dr的SpleeterGui！ https://github.com/boy1dr/SpleeterGui \n\r修改内容：屏蔽json文件读写，新增中文界面 \n\rmodByAcFun我就是来打酱油的", "关于");
         }
     }
 }
