@@ -1,10 +1,11 @@
 2020/04/25
-### modByAcFun我就是来打酱油的
+# modByAcFun我就是来打酱油的
 主要修改内容：在代码中屏蔽JSON文件读写部分，添加中文界面
+# 使用前须知：
 
-使用前须知：
-本地环境要正确安装python（不要太高，3.7左右）及spleeter，而且确认可以正常使用spleeter。
-如果使用conda（anaconda)安装的，不要直接运行SpleeterGui，因为不在conda的环境里面，无法调用spleeter的，可以在anaconda prompt之类中运行，也可以新建批处理类似（base是环境名）如下，放在SpleeterGui.exe同路径下。
+- 本地环境要正确安装python（不要太高，3.7左右）及spleeter，而且确认可以正常使用spleeter。
+- 如果使用conda（anaconda)安装的，不要直接运行SpleeterGui，因为不在conda的环境里面，无法调用spleeter的，可以在anaconda prompt之类中运行，也可以新建批处理类似（base是环境名）如下，放在SpleeterGui.exe同路径下。
+
 
 ```
 start "" cmd /k "activate base&&SpleeterGui.exe"
